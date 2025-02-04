@@ -1,0 +1,16 @@
+version: "3.0"
+
+networks:
+  docker--apache-php-fpm_default:
+    external: true
+
+services:
+  EdwardPassport:
+    image: servidor-web8.2
+    container_name: EdwardPassport
+    ports:
+      - "8851:80"
+    volumes:
+      - "./:/var/www/html"
+    networks:
+      - docker--apache-php-fpm_default

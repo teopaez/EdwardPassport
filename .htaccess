@@ -1,0 +1,34 @@
+Options -MultiViews -Indexes
+
+RewriteEngine On
+# block files which needs to be hidden, specify .example extension of the file
+<Files ~ "\.(env|json|config.js|md|gitignore|gitattributes|lock)$">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Handle Authorization Header
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# Redirect Trailing Slashes If Not A Folder...
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} (.+)/$
+RewriteRule ^ %1 [L,R=301]
+
+# Handle Front Controller...
+RewriteCond %{REQUEST_URI} !(\.ico|\.css|\.js|\.mp3|\.png|\.jpg|\.gif|robots\.txt|\.eot|\.svg|\.ttf|\.woff|\.woff2|\.otf|\.pdf)$ [NC]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ public/$1 [L]
+
+RewriteRule ^(storage|css|js|images)/(.*)$ public/$1/$2 [L,NC]
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-SSL} !on
+RewriteCond %{HTTP_HOST} ^libellum\.com\.co$ [OR]
+RewriteCond %{HTTP_HOST} ^core\.libellum\.com\.co$
+RewriteRule ^/?$ "https\:\/\/core\.libellum\.com\.co\/" [R=301,L]
